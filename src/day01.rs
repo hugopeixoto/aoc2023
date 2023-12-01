@@ -71,11 +71,13 @@ pub fn solve(input: &String) -> (usize, usize) {
         first.unwrap() * 10 + last.unwrap()
     }).sum();
 
-    let p2: u32 = input.lines().map(|line| {
-        let state = line.chars().fold(State::default(), |state, ch| state.next(ch));
-
-        state.first.unwrap() * 10 + state.last.unwrap()
-    }).sum();
+    let p2: u32 = input.chars().fold((0, State::default()), |(sum, state), ch| {
+        if ch == '\n' {
+            (sum + state.first.unwrap() * 10 + state.last.unwrap(), State::default())
+        } else {
+            (sum, state.next(ch))
+        }
+    }).0;
 
     (p1 as usize, p2 as usize)
 }
