@@ -99,16 +99,16 @@ pub fn solve_hard(input: &String) -> (usize, usize) {
 
     for c in input.chars() {
         match (&state, c) {
-            (State::GameID, '0') => { game_id = game_id * 10 + 0; state = State::GameID; },
-            (State::GameID, '1') => { game_id = game_id * 10 + 1; state = State::GameID; },
-            (State::GameID, '2') => { game_id = game_id * 10 + 2; state = State::GameID; },
-            (State::GameID, '3') => { game_id = game_id * 10 + 3; state = State::GameID; },
-            (State::GameID, '4') => { game_id = game_id * 10 + 4; state = State::GameID; },
-            (State::GameID, '5') => { game_id = game_id * 10 + 5; state = State::GameID; },
-            (State::GameID, '6') => { game_id = game_id * 10 + 6; state = State::GameID; },
-            (State::GameID, '7') => { game_id = game_id * 10 + 7; state = State::GameID; },
-            (State::GameID, '8') => { game_id = game_id * 10 + 8; state = State::GameID; },
-            (State::GameID, '9') => { game_id = game_id * 10 + 9; state = State::GameID; },
+            (State::GameID, '0') => { game_id = game_id * 10 + 0; },
+            (State::GameID, '1') => { game_id = game_id * 10 + 1; },
+            (State::GameID, '2') => { game_id = game_id * 10 + 2; },
+            (State::GameID, '3') => { game_id = game_id * 10 + 3; },
+            (State::GameID, '4') => { game_id = game_id * 10 + 4; },
+            (State::GameID, '5') => { game_id = game_id * 10 + 5; },
+            (State::GameID, '6') => { game_id = game_id * 10 + 6; },
+            (State::GameID, '7') => { game_id = game_id * 10 + 7; },
+            (State::GameID, '8') => { game_id = game_id * 10 + 8; },
+            (State::GameID, '9') => { game_id = game_id * 10 + 9; },
             (State::GameID, ':') => { state = State::DrawNumber; },
             (State::DrawNumber, '0') => { balls = balls * 10 + 0; },
             (State::DrawNumber, '1') => { balls = balls * 10 + 1; },
@@ -123,7 +123,7 @@ pub fn solve_hard(input: &String) -> (usize, usize) {
             (State::DrawNumber, 'r') => { red = balls; balls = 0; state = State::DrawColorSkip; },
             (State::DrawNumber, 'g') => { green = balls; balls = 0; state = State::DrawColorSkip; },
             (State::DrawNumber, 'b') => { blue = balls; balls = 0; state = State::DrawColorSkip; },
-            (State::DrawColorSkip, ',') => { state = State::DrawNumber; }, // end of balls
+            (State::DrawColorSkip, ',') => { state = State::DrawNumber; },
             (State::DrawColorSkip, ';') => {
                 max_red = max_red.max(red);
                 max_green = max_green.max(green);
@@ -131,7 +131,7 @@ pub fn solve_hard(input: &String) -> (usize, usize) {
 
                 red = 0; green = 0; blue = 0;
                 state = State::DrawNumber;
-            }, // end of draw
+            },
             (State::DrawColorSkip, '\n') => {
                 max_red = max_red.max(red);
                 max_green = max_green.max(green);
@@ -149,7 +149,7 @@ pub fn solve_hard(input: &String) -> (usize, usize) {
 
                 game_id = 0;
                 state = State::GameID;
-            }, // end of game
+            },
             _ => { }
         }
     }
