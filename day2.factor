@@ -11,12 +11,7 @@ TUPLE: game-draw
   { blue integer initial: 0 }
   ;
 
-: make-draw ( r g b -- draw )
-  game-draw new
-  swap >>blue
-  swap >>green
-  swap >>red
-  ;
+C: <game-draw> game-draw
 
 : parse-draw ( seq -- game-draw )
   "," split
@@ -59,23 +54,29 @@ TUPLE: game
   [ is-valid-draw? ] all?
   ;
 
-: part1 ( filename -- result )
+
+: parse-games-from-file ( filename -- games )
   utf8 file-lines
   [ parse-game ] map
+  ;
+
+: part1 ( filename -- result )
+  parse-games-from-file
   [ is-valid-game? ] filter
-  [ id>> ] map
-  sum
+  [ id>> ] map-sum
+  ;
+
+: minimum-draw-pair ( draw1 draw2 -- draw )
+  [ [ red>> ] bi@ max ] 2keep
+  [ [ green>> ] bi@ max ] 2keep
+  [ blue>> ] bi@ max
+  <game-draw>
   ;
 
 : minimum-draw ( game -- draw )
   draws>>
-  0 0 0 make-draw
-  [ ! ( acc elt -- elt )
-    [ red>> [ red>> ] dip max ] 2keep
-    [ green>> [ green>> ] dip max ] 2keep
-    blue>> [ blue>> ] dip max
-    make-draw
-  ] reduce
+  0 0 0 <game-draw>
+  [ minimum-draw-pair ] reduce
   ;
 
 : draw-power ( draw -- power )
@@ -86,11 +87,8 @@ TUPLE: game
   ;
 
 : part2 ( filename -- result )
-  utf8 file-lines
-  [ parse-game ] map
-  [ minimum-draw ] map
-  [ draw-power ] map
-  sum
+  parse-games-from-file
+  [ minimum-draw draw-power ] map-sum
   ;
 
 command-line get last
