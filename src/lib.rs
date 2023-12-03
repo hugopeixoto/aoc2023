@@ -3,6 +3,7 @@ extern crate test;
 
 pub mod day01;
 pub mod day02;
+pub mod day03;
 
 #[macro_export]
 macro_rules! run {
