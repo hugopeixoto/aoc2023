@@ -1,6 +1,7 @@
 #![feature(test)]
 extern crate test;
 
+pub mod brainfuck;
 pub mod day01;
 pub mod day02;
 pub mod day03;
