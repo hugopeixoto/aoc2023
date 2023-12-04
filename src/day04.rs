@@ -2,6 +2,18 @@ pub fn parse_vec_usize(line: &str) -> std::collections::HashSet<usize> {
     line.split(" ").filter_map(|p| p.parse::<usize>().ok()).collect()
 }
 
+pub fn parse_scratch_card(line: &str) -> (usize, usize) {
+    let mut parts = line.split(":");
+    let id = parts.next().unwrap().split(" ").last().unwrap().parse::<usize>().unwrap();
+
+    let mut parts = parts.next().unwrap().split("|");
+    let winners = parse_vec_usize(parts.next().unwrap());
+    let numbers = parse_vec_usize(parts.next().unwrap());
+    let matches = winners.intersection(&numbers).count();
+
+    (id, matches)
+}
+
 pub fn points(n: usize) -> usize {
     if n == 0 {
         0
@@ -17,13 +29,7 @@ pub fn solve(input: &String) -> (usize, usize) {
     let mut queue = vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
     for (index, line) in input.lines().enumerate() {
-        let mut parts = line.split(":");
-        let id = parts.next().unwrap().split(" ").last().unwrap().parse::<usize>().unwrap();
-
-        let mut parts = parts.next().unwrap().split("|");
-        let winners = parse_vec_usize(parts.next().unwrap());
-        let numbers = parse_vec_usize(parts.next().unwrap());
-        let matches = winners.intersection(&numbers).count();
+        let (_, matches) = parse_scratch_card(&line);
 
         p1 += points(matches);
 
