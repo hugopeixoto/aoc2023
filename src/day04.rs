@@ -1,4 +1,4 @@
-pub fn parse_vec_usize(line: &str) -> std::collections::HashSet<usize> {
+pub fn parse_vec_usize(line: &str) -> Vec<usize> {
     line.split(" ").filter_map(|p| p.parse::<usize>().ok()).collect()
 }
 
@@ -9,7 +9,7 @@ pub fn parse_scratch_card(line: &str) -> (usize, usize) {
     let mut parts = parts.next().unwrap().split("|");
     let winners = parse_vec_usize(parts.next().unwrap());
     let numbers = parse_vec_usize(parts.next().unwrap());
-    let matches = winners.intersection(&numbers).count();
+    let matches = numbers.iter().filter(|n| winners.contains(n)).count();
 
     (id, matches)
 }
