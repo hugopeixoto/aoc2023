@@ -28,8 +28,7 @@ macro_rules! run {
 macro_rules! bench {
 
     ( $day:ident ) => {
-        use paste::paste;
-        paste! {
+        paste::paste! {
             #[bench]
             fn [<bench_ $day>](b: &mut test::Bencher) {
                 let filename = format!("inputs/{}.in", stringify!($day));
