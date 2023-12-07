@@ -1,4 +1,4 @@
-pub fn parse_vec_usize(line: &str) -> Vec<usize> {
+fn parse_vec_usize(line: &str) -> Vec<usize> {
     line.split(" ").filter_map(|p| p.parse::<usize>().ok()).collect()
 }
 
@@ -14,7 +14,7 @@ pub fn parse_scratch_card(line: &str) -> (usize, usize) {
     (id, matches)
 }
 
-pub fn points(n: usize) -> usize {
+fn points(n: usize) -> usize {
     if n == 0 {
         0
     } else {
