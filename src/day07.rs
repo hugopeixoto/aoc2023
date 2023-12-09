@@ -110,7 +110,7 @@ pub fn solve(input: &String) -> (usize, usize) {
     let mut hands = input.lines().map(|line| {
         let mut parts = line.split(" ");
         let hand = parts.next().unwrap();
-        let bid = parts.next().unwrap().parse().unwrap();
+        let bid = parts.next().unwrap().parse::<usize>().unwrap();
 
         (Hand::new_v1(hand), bid)
     }).collect::<Vec<_>>();
@@ -121,7 +121,7 @@ pub fn solve(input: &String) -> (usize, usize) {
     let mut hands = input.lines().map(|line| {
         let mut parts = line.split(" ");
         let hand = parts.next().unwrap();
-        let bid = parts.next().unwrap().parse().unwrap();
+        let bid = parts.next().unwrap().parse::<usize>().unwrap();
 
         (Hand::new_v2(hand), bid)
     }).collect::<Vec<_>>();
