@@ -2,7 +2,7 @@
 extern crate test;
 
 fn main() {
-    aoc2023::run!(day11);
+    aoc2023::run!(day12);
 }
 
 aoc2023::bench!(day01);
@@ -15,3 +15,4 @@ aoc2023::bench!(day07);
 aoc2023::bench!(day08);
 aoc2023::bench!(day10);
 aoc2023::bench!(day11);
+aoc2023::bench!(day12);
