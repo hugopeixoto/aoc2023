@@ -1,6 +1,6 @@
 
-fn neighbors((x,y): (usize, usize), matrix: &Vec<Vec<char>>) -> Option<((usize, usize), (usize, usize))> {
-    match matrix[y][x] {
+fn neighbors((x,y): (usize, usize), matrix: &Vec<Vec<(char, bool)>>) -> Option<((usize, usize), (usize, usize))> {
+    match matrix[y][x].0 {
         '-' => { Some(((x-1, y), (x+1, y))) },
         '|' => { Some(((x, y-1), (x, y+1))) },
         'L' => { Some(((x, y-1), (x+1, y))) },
@@ -8,15 +8,15 @@ fn neighbors((x,y): (usize, usize), matrix: &Vec<Vec<char>>) -> Option<((usize, 
         '7' => { Some(((x-1, y), (x, y+1))) },
         'F' => { Some(((x+1, y), (x, y+1))) },
         '.' => { None },
-        _ => { panic!("huh? {}", matrix[y][x]); }
+        _ => { panic!("huh? {:?}", matrix[y][x]); }
     }
 }
 
-fn real_s((x,y): (usize, usize), matrix: &Vec<Vec<char>>) -> char {
-    let up = y > 0 && (matrix[y-1][x] == '|' || matrix[y-1][x] == 'F' || matrix[y-1][x] == '7');
-    let down = y + 1 < matrix.len() && (matrix[y+1][x] == '|' || matrix[y+1][x] == 'L' || matrix[y+1][x] == 'J');
-    let left = x > 0 && (matrix[y][x-1] == '-' || matrix[y][x-1] == 'L' || matrix[y][x-1] == 'F');
-    let right = x + 1 < matrix[0].len() && (matrix[y][x+1] == '-' || matrix[y][x+1] == 'J' || matrix[y][x+1] == '7');
+fn real_s((x,y): (usize, usize), matrix: &Vec<Vec<(char, bool)>>) -> char {
+    let up = y > 0 && (matrix[y-1][x].0 == '|' || matrix[y-1][x].0 == 'F' || matrix[y-1][x].0 == '7');
+    let down = y + 1 < matrix.len() && (matrix[y+1][x].0 == '|' || matrix[y+1][x].0 == 'L' || matrix[y+1][x].0 == 'J');
+    let left = x > 0 && (matrix[y][x-1].0 == '-' || matrix[y][x-1].0 == 'L' || matrix[y][x-1].0 == 'F');
+    let right = x + 1 < matrix[0].len() && (matrix[y][x+1].0 == '-' || matrix[y][x+1].0 == 'J' || matrix[y][x+1].0 == '7');
 
     match (up, down, left, right) {
         (true, true, false, false) => '|',
@@ -30,28 +30,27 @@ fn real_s((x,y): (usize, usize), matrix: &Vec<Vec<char>>) -> char {
 }
 
 pub fn solve(input: &String) -> (usize, usize) {
-    let mut matrix = input.lines().map(|line| line.chars().collect::<Vec<_>>()).collect::<Vec<_>>();
+    let mut matrix = input.lines().map(|line| line.chars().map(|c| (c, false)).collect::<Vec<_>>()).collect::<Vec<_>>();
     let width = matrix[0].len();
     let height = matrix.len();
 
     let mut start = (0, 0);
     for x in 0..width {
         for y in 0..height {
-            if matrix[y][x] == 'S' {
+            if matrix[y][x].0 == 'S' {
                 start = (x, y);
             }
         }
     }
 
-    matrix[start.1][start.0] = real_s(start, &matrix);
+    matrix[start.1][start.0].0 = real_s(start, &matrix);
 
     let mut prev = start;
     let mut next = neighbors(prev, &matrix).unwrap().0;
     let mut steps = 1;
-    let mut visited = std::collections::HashSet::new();
-    visited.insert(prev);
+    matrix[prev.1][prev.0].1 = true;
     while next != start {
-        visited.insert(next);
+        matrix[next.1][next.0].1 = true;
         let (n1, n2) = neighbors(next, &matrix).unwrap();
         if prev == n1 {
             prev = next;
@@ -68,8 +67,8 @@ pub fn solve(input: &String) -> (usize, usize) {
         let mut state = S::Outside;
         let mut from = F::Nowhere;
         for x in 0..width {
-            if visited.contains(&(x, y)) {
-                match (&state, &from, matrix[y][x]) {
+            if matrix[y][x].1 {
+                match (&state, &from, matrix[y][x].0) {
                     (S::Outside | S::Inside, _, '|') => { state = state.flip(); }
                     (_, F::Nowhere, 'F') => { from = F::Down; }
                     (_, F::Nowhere, 'L') => { from = F::Up; }
@@ -81,7 +80,6 @@ pub fn solve(input: &String) -> (usize, usize) {
                     _ => { panic!("{:?} {:?} {:?}", state, from, matrix[y][x]); }
                 }
             } else if state == S::Inside {
-                println!("{},{} is inside", x,y);
                 inside += 1;
             }
 
