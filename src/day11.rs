@@ -3,11 +3,8 @@ pub fn solve(input: &String) -> (usize, usize) {
     let w = matrix[0].len();
     let h = matrix.len();
 
-    let mut stars_x = vec![];
-    stars_x.resize(w, false);
-
-    let mut stars_y = vec![];
-    stars_y.resize(h, false);
+    let mut stars_x = vec![false; w];
+    let mut stars_y = vec![false; h];
 
     let mut expansions_w = Vec::with_capacity(w);
     let mut expansions_h = Vec::with_capacity(h);
