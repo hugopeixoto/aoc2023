@@ -16,32 +16,17 @@ enum Type {
     Middle,
 }
 
-fn find_loop(mut id: usize, idx: usize, seq: &Vec<char>, tree: &Vec<(usize, usize, Type)>) -> (Vec<usize>, usize) {
-    let mut seen = std::collections::HashMap::new();
-
-    let mut prev = 0;
-    let mut steps = idx;
-    let mut results = vec![];
+fn find_loop(mut id: usize, seq: &Vec<char>, tree: &Vec<(usize, usize, Type)>) -> usize {
+    let mut steps = 0;
     loop {
         let next = if seq[steps % seq.len()] == 'R' { tree[id].1 } else { tree[id].0 };
         steps += 1;
         id = next;
 
-        if seen.contains_key(&(id, steps % seq.len())) {
-            //println!("looping {} {}(%{})", id, steps, steps % seq.len());
-            break;
-        }
-
         if tree[id].2 == Type::End {
-            //println!("inserting {} {}(%{}) {}", id, steps, steps % seq.len(), results.len());
-            seen.insert((id, steps % seq.len()), results.len());
-            results.push(steps - prev);
-            prev = steps;
+            return steps;
         }
-
     }
-
-    (results, seen[&(id, steps % seq.len())])
 }
 
 pub fn solve(input: &String) -> (usize, usize) {
@@ -84,12 +69,10 @@ pub fn solve(input: &String) -> (usize, usize) {
     let mut x = 1;
     for id in 0..ids.len() {
         if tree[id].2 == Type::Start {
-            let zloop = find_loop(id, 0, &seq, &tree);
+            let zloop = find_loop(id, &seq, &tree);
 
             // lucky for me zloop.0.len() == 1
-            x = num::integer::lcm(x, zloop.0[0]);
-
-            //println!("loop({:?}): {:?} = {}", id, zloop, x);
+            x = num::integer::lcm(x, zloop);
         }
     }
 
