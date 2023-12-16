@@ -13,6 +13,7 @@ aoc2023::bench!(day05);
 aoc2023::bench!(day06);
 aoc2023::bench!(day07);
 aoc2023::bench!(day08);
+aoc2023::bench!(day09);
 aoc2023::bench!(day10);
 aoc2023::bench!(day11);
 aoc2023::bench!(day12);
